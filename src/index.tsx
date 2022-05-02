@@ -3,13 +3,24 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
+import { ReactQueryProvider } from './lib/react-query';
+import { AuthProvider } from './lib/react-query-auth/react-query-auth';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <ReactQueryProvider>
+      <AuthProvider >
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
+
+    </ReactQueryProvider>
+
   </React.StrictMode>
 );
 
