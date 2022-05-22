@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { ReactQueryProvider } from './lib/react-query';
-import { AuthProvider } from './lib/react-query-auth/react-query-auth';
+// import { AuthProvider } from './lib/react-query-auth/react-query-auth';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,11 +13,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ReactQueryProvider>
-      <AuthProvider >
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </AuthProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
 
     </ReactQueryProvider>
 

@@ -1,1 +1,1 @@
-export { default } from "./TypingFieldMultiplayer"
+export { default } from "./TypingFieldMultiplayer.Page"

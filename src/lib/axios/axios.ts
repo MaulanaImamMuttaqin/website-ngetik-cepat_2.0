@@ -3,7 +3,13 @@ import { storage } from "../../utils/storage";
 
 const client = axios.create({ baseURL: 'http://localhost:8000' })
 
-export const request = ({ ...options }) => {
+type options = {
+    url: string,
+    method?: string,
+    data?: any
+}
+
+export const request = ({ ...options }: options) => {
     let token = storage.getToken()
     client.defaults.headers.common.Authorization = `Bearer ${token}`
     const onSuccess = (response: any) => response

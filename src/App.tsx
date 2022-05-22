@@ -1,21 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
 import Login from './components/Login';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import TypingFieldMultiplayer from './components/TypingFieldMultiplayer';
-import TypingField from './components/TypingField';
-import { QueryClient, QueryClientProvider, } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools'
+import TypingFieldSinglePlayer from './components/TypingFieldSinglePlayer';
+import Wrapper from './components/Wrapper';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import AuthContextProvider from './components/AuthContext/AuthContextProvider';
 
+// const routes = {
+//   {path:'/Login', element}
+// }
 
 function App() {
+
+  const location = useLocation()
   return (
-    <Routes>
-      <Route path='/Login' element={<Login />} />
-      <Route path='/type-multiplayer' element={<TypingFieldMultiplayer />} />
-      <Route path='' element={<TypingField />} />
-    </Routes>
+    <AuthContextProvider>
+      <Wrapper>
+        <TransitionGroup component={null}>
+          <CSSTransition key={location.key} timeout={300} classNames='router'>
+            <Routes location={location}>
+              <Route path='/Login' element={<Login />} />
+              <Route path='/type-multiplayer' element={<TypingFieldMultiplayer />} />
+              <Route path='' element={<TypingFieldSinglePlayer />} />
+            </Routes>
+          </CSSTransition>
+        </TransitionGroup>
+      </Wrapper>
+    </AuthContextProvider>
+
   );
 }
 

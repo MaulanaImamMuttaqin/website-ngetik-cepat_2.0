@@ -14,3 +14,54 @@ body {
 .center {
   @apply flex justify-center items-center;
 }
+
+.center-child {
+  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+}
+
+.button-style {
+  @apply bg-gradient-to-br from-blue-600 to-blue-500 text-gray-300;
+}
+
+.menu-style {
+  @apply h-14 pl-5 flex items-center gap-7 my-5 relative cursor-pointer;
+}
+
+.word-highlight {
+  @apply text-4xl text-gray-200
+}
+
+.word-normal {
+  @apply text-xl text-gray-600
+}
+
+#profile:hover>#profile-dropdown {
+  @apply top-[80px] opacity-100 visible
+}
+
+#profile:hover>div:first-child {
+  @apply text-dark-blue-gradient bg-white cursor-pointer
+}
+
+#sidebar:hover {
+  @apply translate-x-0
+}
+
+/* router transition */
+.router-enter {
+  transform: scale(1.1);
+}
+
+.router-enter-active {
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.router-exit {
+  transform: scale(1);
+}
+
+.router-exit-active {
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
+}
