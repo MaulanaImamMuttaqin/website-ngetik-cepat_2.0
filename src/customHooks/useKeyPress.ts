@@ -11,13 +11,16 @@ const useKeyPress = (targetKey: string, event: string, reference: any) => {
             // console.log(handler.key)
         }
         else if (targetKey.includes(handler.key)) {
+            // console.log(handler.key)
             setKeyPressed(true)
         };
     };
 
     const upHandler = (handler: handler) => {
         if (event === 'mouse') setKeyPressed(false)
-        else if (targetKey.includes(handler.key)) setKeyPressed(false);
+        else if (targetKey.includes(handler.key)) {
+            setKeyPressed(false)
+        };
     };
 
 

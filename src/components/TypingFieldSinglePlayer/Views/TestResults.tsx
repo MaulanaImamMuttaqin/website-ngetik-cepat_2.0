@@ -7,6 +7,7 @@ function TestResults({ ...props }: { TFstate: ITFState, TPstate: ITPState, wordS
     //     console.log("test")
     //     wordRef.current?.scrollIntoView({ behavior: 'smooth' })
     // }, [props.wordStuckList])
+    let reversed = props.wordStuckList.slice().reverse()
     return (
         <div className={`h-[370px] w-[450px] p-10 ml-10 ${(props.TFstate.timer === 0 && !props.TFstate.typingStarted) && 'translate-y-10 opacity-0 w-0 p-0 ml-0'} overflow-hidden  transition-all  text-white flex flex-col items-center justify-between border border-white rounded-xl`}>
             {/* <h1 className='text-3xl font-semibold'>Typing Result</h1>
@@ -22,9 +23,15 @@ function TestResults({ ...props }: { TFstate: ITFState, TPstate: ITPState, wordS
                 <p>{props.TPstate.speed} KPM</p>
             </div> */}
             <div className='flex  border border-white flex-col w-full h-full pt-10'>
-                {props.wordStuckList.slice().reverse().map((w, i) => {
+                <pre>
+                    {
+
+                        JSON.stringify(reversed, null, 4)
+                    }
+                </pre>
+                {/* {props.wordStuckList.slice().reverse().map((w, i) => {
                     return <div key={i}>{w}</div>
-                })}
+                })} */}
             </div>
         </div>
     )
