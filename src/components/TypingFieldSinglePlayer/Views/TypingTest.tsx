@@ -11,7 +11,7 @@ function TypingTest({ ...props }: ITFProps) {
             <div className={` p-2 rounded-2xl shadow-2xl`}>
                 <div className=" font-semibold tracking-[.1em] text-xl border-b border-white text-blue-500 flex justify-between px-5 mb-5">
                     <span>{props.states.TFstate.timer}</span>
-                    {/* <span>{props.states.lpsDisplay[props.states.lpsDisplay.length - 1]}</span> */}
+                    <span>{props.states.nextTypedDuration}</span>
                     <span onClick={() => props.restart(true)}> <RefreshIcon className='h-6 w-6' /></span>
                 </div>
                 <div className='relative h-[350px] w-[400px]'>

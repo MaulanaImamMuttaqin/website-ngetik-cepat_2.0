@@ -61,6 +61,7 @@ export interface ITFProps {
     states: {
         TFstate: ITFState,
         TPstate: ITPState,
+        nextTypedDuration: number,
         lpsDisplay: Array<number>
     },
     refs: {

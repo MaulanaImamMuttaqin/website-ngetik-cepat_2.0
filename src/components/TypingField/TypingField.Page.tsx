@@ -15,7 +15,8 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
     const [letterTyped, setLTyped] = useState<number>(0)
     // const [lpsDisplay, setLpsDisplay] = useState<Array<number>>([])
     const [wordStuckList, setWordStuckList] = useState<Array<any>>([])
-    const [rythmInterval, setRythmInterval] = useState<NodeJS.Timer>()
+    const [rythmInterval, setRythmInterval] = useState<NodeJS.Timer>(setInterval(() => null))
+    const [intervalIsStarted, setIntervalIsStarted] = useState<boolean | null>(null)
     const [nextTypedDuration, setNextTypedDuration] = useState<number>(0)
     const [ryhtmWord, setRythmWord] = useState<Array<number>>([])
     // const [wordStuckDict, ,setWordStuckdict] = useState<
@@ -67,6 +68,14 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
             exessElContainer.current[TFstate.HLIndex].innerHTML = ""
         }
 
+        if (!intervalIsStarted && intervalIsStarted != null) {
+
+            setRythmInterval(setInterval(() => {
+                // console.log("input handler")
+                setNextTypedDuration(p => p + 1)
+            }, 10))
+            setIntervalIsStarted(true)
+        }
         // if the user pressed space
         if (spaceExist) {
             if (word === "") return inputRef.current!.value = ""
@@ -74,8 +83,14 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
             TPDispatch({ type: ITPActions.CHAR })
             checkTypedWord(TFstate.wordTyped, words[TFstate.HLIndex])
             inputRef.current!.value = ""
-            // clearInterval(rythmInterval)
+            clearInterval(rythmInterval)
+            setIntervalIsStarted(false)
+            setRythmWord(p => [...p, nextTypedDuration])
+            setNextTypedDuration(0)
+            console.log(ryhtmWord)
+            setRythmWord([])
         }
+
     }
 
     const checkTypedWord = (typed: string, answer: string) => {
@@ -171,22 +186,17 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
 
 
     useEffect(() => {
-
+        if (!TFstate.typingStarted) return;
         const interval = setInterval(() => {
             setNextTypedDuration(p => p + 1)
-        }, 100)
+        }, 10)
         setRythmInterval(interval)
+        setIntervalIsStarted(true)
         return () => {
             clearInterval(interval)
         }
     }, [TFstate.typingStarted])
 
-
-    useEffect(() => {
-        if (!typedCorrect) return;
-        setRythmWord(p => [...p, nextTypedDuration])
-        setNextTypedDuration(0)
-    }, [TPstate.charCount])
 
     useEffect(() => {
         if (!(mousePressed && !TFstate.inputIsFocus)) return;
@@ -207,6 +217,7 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
     useEffect(() => {
         setLTyped(p => p + 1)
         if (!typedCorrect && typedCorrect != null) {
+
             let data = [...wordStuckList]
             let obj = data.find((o, i) => {
                 if (o.word === words[TFstate.HLIndex]) {
@@ -224,7 +235,10 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
                 correct: true,
                 missClick: 1
             }])
-
+        }
+        else {
+            setRythmWord(p => [...p, nextTypedDuration])
+            setNextTypedDuration(0)
         }
     }, [TPstate.charCount])
 
@@ -242,6 +256,11 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
         TFDispatch({ type: ITFActions.RESET })
         TPDispatch({ type: ITPActions.RESET })
         setLTyped(0)
+        setNextTypedDuration(0)
+        setIntervalIsStarted(null)
+        setRythmWord([])
+        console.log(ryhtmWord)
+        clearInterval(rythmInterval)
         // setLps(0)
     }
 
@@ -274,6 +293,7 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
         states: {
             TFstate, TPstate,
             // lpsDisplay, 
+            nextTypedDuration,
             wordStuckList
         },
         refs: {
