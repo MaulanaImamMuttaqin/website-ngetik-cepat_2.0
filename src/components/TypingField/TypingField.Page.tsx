@@ -189,7 +189,7 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
         if (!TFstate.typingStarted) return;
         const interval = setInterval(() => {
             setNextTypedDuration(p => p + 1)
-        }, 10)
+        }, 1)
         setRythmInterval(interval)
         setIntervalIsStarted(true)
         return () => {
