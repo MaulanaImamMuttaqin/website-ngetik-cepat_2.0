@@ -32,6 +32,7 @@ export enum ITPActions {
     RESET = 'RESET',
     UPLOAD = 'UPLOAD',
     STOP_UPLOAD = 'STOP_UPLOAD',
+    FINISH = "FINISH"
 }
 
 export interface ITPState {

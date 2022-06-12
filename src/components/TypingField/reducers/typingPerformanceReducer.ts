@@ -17,14 +17,16 @@ export const typingPerformanceReducer = (state: ITPState, action: Action) => {
                 ...state,
                 wordCorrect: state.wordCorrect + 1,
                 wordCount: state.wordCount + 1,
-                charWrong: state.charWrong + payload
+                charWrong: state.charWrong + payload,
+                charCount: state.charCount + 1,
             }
         case ITPActions.INCORRECT:
             return {
                 ...state,
                 wordWrong: state.wordWrong + 1,
                 wordCount: state.wordCount + 1,
-                charWrong: state.charWrong + payload
+                charWrong: state.charWrong + payload,
+                charCount: state.charCount + 1,
             }
         case ITPActions.CHAR:
             return {
@@ -55,6 +57,14 @@ export const typingPerformanceReducer = (state: ITPState, action: Action) => {
             return {
                 ...state,
                 upload: false
+            }
+        case ITPActions.FINISH:
+            return {
+                ...state,
+                upload: true,
+                showPerformance: true,
+                speed: payload.net,
+                accuracy: payload.accuracy
             }
         default:
             return state;

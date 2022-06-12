@@ -1,9 +1,9 @@
-import React, { ChangeEvent, createContext, useEffect, useReducer, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import useKeyPress from '../../customHooks/useKeyPress'
+import { calculateTypingSpeed, getStandardDeviation } from '../../utils/utils'
 import { ITFActions, ITPActions } from './Interfaces'
 import Reducers from './reducers/Reducers'
 import Refs from './refs'
-import typingFieldStates from './states/typingFieldStates'
 
 
 const TypingField = ({ children, query }: { children: any, query?: any }) => {
@@ -11,24 +11,24 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
     const { TFstate, TPstate, TFDispatch, TPDispatch } = Reducers()
     const { letterRef, inputRef, exessElContainer, focusCoverRef } = Refs()
     const mousePressed = useKeyPress("mouse", "mouse", window)
-    const [typedCorrect, setTypedCorrect] = useState<boolean | null>(null)
-    const [letterTyped, setLTyped] = useState<number>(0)
-    // const [lpsDisplay, setLpsDisplay] = useState<Array<number>>([])
-    const [wordStuckList, setWordStuckList] = useState<Array<any>>([])
-    const [rythmInterval, setRythmInterval] = useState<NodeJS.Timer>(setInterval(() => null))
-    const [intervalIsStarted, setIntervalIsStarted] = useState<boolean | null>(null)
-    const [nextTypedDuration, setNextTypedDuration] = useState<number>(0)
+
     const [ryhtmWord, setRythmWord] = useState<Array<number>>([])
-    // const [wordStuckDict, ,setWordStuckdict] = useState<
+    const [SDList, setSDList] = useState<Array<any>>([])
+
+    const [wrgLettTotal, setWrgLettTotal] = useState<number>(0)
+    const [ifWordStarted, setIfWordStarted] = useState<boolean>(false)
+    // const [letWrgInd , setLetWrgInd] = useState()
 
     const inputHandler = (e: ChangeEvent<HTMLInputElement>) => {
         TFDispatch({ type: ITFActions.START })
         let spaceExist = e.target.value[e.target.value.length - 1] === " " ? true : false
         let element = letterRef.current[TFstate.HLIndex]
         let letters = element.childNodes as NodeListOf<HTMLElement>
-        // let typed = e.target.value.split(/\s+/)
-        let word = e.target.value.trim()
+        let word = e.target.value
         let word_arr = word.split("")
+        let typedCorrect: boolean | null = words[TFstate.HLIndex].startsWith(word.trim())
+
+
         TFDispatch({ type: ITFActions.TYPED, payload: word })
         if (word.length > TFstate.wordTyped.length) {
             TPDispatch({ type: ITPActions.CHAR })
@@ -36,22 +36,16 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
 
         // loop for coloring each letter in the word
         words[TFstate.HLIndex].split("").forEach((l: any, i: number) => {
+            letters[i].classList.remove("text-white", "text-blue-500", "text-red-600", "border-b-2", "border-red-600")
             if (word_arr[i] === undefined) {
-                letters[i].style.color = "white"
+                letters[i].classList.add("text-white")
             } else {
-                if (letters[i].innerText === word_arr[i]) {
-                    // console.log("right")
-                    setTypedCorrect(true)
-                    letters[i].style.color = '#3b82f6'
-                } else {
-                    letters[i].style.color = '#eb4034'
-                    setTypedCorrect(false)
-                    // console.log("wrong")
-                }
+                if (letters[i].innerText === word_arr[i]) letters[i].classList.add("text-blue-500")
+                else letters[i].classList.add("text-red-600", "border-b-2", "border-red-600")
             }
         })
 
-        // loop to render an excessed letter typed by the user and paint it with color red
+
         if (word_arr.length > words[TFstate.HLIndex].length) {
             let exessCont = exessElContainer.current[TFstate.HLIndex]
             exessCont.innerHTML = ""
@@ -59,42 +53,58 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
             word_arr.slice(words[TFstate.HLIndex].length, word_arr.length).forEach((w, i) => {
                 let newEl = document.createElement("SPAN")
                 let text = document.createTextNode(w)
-                newEl.setAttribute("style", "color: rgb(235, 64, 52);")
+                newEl.classList.add("text-red-600", "border-b-2", "border-red-600")
                 newEl.appendChild(text)
                 exessCont.appendChild(newEl)
             })
-            setTypedCorrect(false)
         } else {
             exessElContainer.current[TFstate.HLIndex].innerHTML = ""
         }
 
-        if (!intervalIsStarted && intervalIsStarted != null) {
-
-            setRythmInterval(setInterval(() => {
-                // console.log("input handler")
-                setNextTypedDuration(p => p + 1)
-            }, 10))
-            setIntervalIsStarted(true)
+        if ((typedCorrect && typedCorrect != null) || !ifWordStarted) {
+            setRythmWord(p => [...p, Math.round(Date.now() / 10)])
+            console.log("rythm")
+            setIfWordStarted(true)
+        } else {
+            setWrgLettTotal(p => p + 1)
         }
-        // if the user pressed space
+
+        // if the user pressed space move to next word and check the previously typed word if correct or not 
         if (spaceExist) {
+            let [isCorrect, wrongChar] = checkTypedWord(TFstate.wordTyped, words[TFstate.HLIndex])
+            if (!typedCorrect || !isCorrect) return;
             if (word === "") return inputRef.current!.value = ""
-            TFDispatch({ type: ITFActions.SPACED })
-            TPDispatch({ type: ITPActions.CHAR })
-            checkTypedWord(TFstate.wordTyped, words[TFstate.HLIndex])
-            inputRef.current!.value = ""
-            clearInterval(rythmInterval)
-            setIntervalIsStarted(false)
-            setRythmWord(p => [...p, nextTypedDuration])
-            setNextTypedDuration(0)
-            console.log(ryhtmWord)
-            setRythmWord([])
-        }
 
+
+            TFDispatch({ type: ITFActions.SPACED })
+            if (isCorrect) TPDispatch({ type: ITPActions.CORRECT, payload: wrongChar })
+            else TPDispatch({ type: ITPActions.INCORRECT, payload: wrongChar })
+            let rythm = calculateRyhtm(ryhtmWord)
+            setSDList(p => [...p, {
+                word: words[TFstate.HLIndex],
+                standDeviation: getStandardDeviation(rythm) + (wrgLettTotal * 2),
+                rythm: JSON.stringify(rythm),
+                correct: isCorrect
+            }])
+            inputRef.current!.value = ""
+            setRythmWord([])
+            setWrgLettTotal(0)
+            setIfWordStarted(false)
+        }
+    }
+
+
+    const calculateRyhtm = (rythm: number[]) => {
+        let r: number[] = []
+        for (let i = 0; i < rythm.length; i++) {
+            if (rythm[i + 1]) {
+                r.push(rythm[i + 1] - rythm[i])
+            }
+        }
+        return r
     }
 
     const checkTypedWord = (typed: string, answer: string) => {
-        let correct: boolean
         let typedArr = typed.split("")
         let answerArr = answer.split("")
         let wrongChar = (typedArr.length > answerArr.length) ? typedArr.length - answerArr.length : 0;
@@ -103,55 +113,17 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
                 wrongChar++
             }
         })
-
         if (typed.trim() !== answer) {
-            letterRef.current[TFstate.HLIndex].style.borderBottom = "2px solid #ad070f"
-            let data = [...wordStuckList]
-            let obj = data.find((o, i) => {
-                if (o.word === words[TFstate.HLIndex]) {
-                    data[i].correct = false
-                    data[i].totClicked = letterTyped
-                    return true
-                }
-            })
 
-            if (obj) setWordStuckList(data)
-            else setWordStuckList([...data, {
-                word: words[TFstate.HLIndex],
-                totClicked: letterTyped,
-                correct: false
-            }])
-
-            setTypedCorrect(null)
-
-            TPDispatch({ type: ITPActions.INCORRECT, payload: wrongChar })
-            return;
-        } else {
-            let data = [...wordStuckList]
-            let obj = data.find((o, i) => {
-                if (o.word === words[TFstate.HLIndex]) {
-                    data[i].totClicked = letterTyped
-                    return true
-                }
-            })
-            if (obj) setWordStuckList(data)
+            // letterRef.current[TFstate.HLIndex].classList.add("border-b-2", "border-red-500")
+            return [false, wrongChar];
         }
-
-        setLTyped(0)
-        letterRef.current[TFstate.HLIndex].style.borderBottom = "none"
-        TPDispatch({ type: ITPActions.CORRECT, payload: wrongChar })
+        // letterRef.current[TFstate.HLIndex].classList.remove("border-b-2", "border-red-500")
+        return [true, wrongChar]
     }
 
-    const calculateTypingSpeed = (char: number, wrong: number) => {
-        let gross = char / 5
-        let time = typingFieldStates.timer / 60
-        let net = Math.round((gross - wrong) / time)
-        let accuracy = (((char - wrong) / char) * 100).toFixed(1)
-        TPDispatch({ type: ITPActions.CALCULATE, payload: { net, accuracy } })
-        // console.log(TPstate)
-    }
 
-    // const calculate
+
 
 
     useEffect(() => {
@@ -160,42 +132,23 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
         if (TFstate.typingStarted && TFstate.timer !== 0) {
 
             timerInterval = window.setInterval(() => {
-
-
                 if (!TFstate.isPaused) {
                     TFDispatch({ type: ITFActions.DECREASE_TIME })
                 }
             }, 1000)
         } else if (TFstate.timer === 0) {
-            TPDispatch({ type: ITPActions.UPLOAD })
-            TPDispatch({ type: ITPActions.SHOW })
+            let [net, accuracy] = calculateTypingSpeed(TPstate.charCount, TPstate.charWrong)
+            TPDispatch({ type: ITPActions.FINISH, payload: { net, accuracy } })
             TFDispatch({ type: ITFActions.STOP })
-            setWordStuckList([])
-            calculateTypingSpeed(TPstate.charCount, TPstate.charWrong)
             clearInterval(timerInterval)
-
+            // clearInterval(rythmInterval)
         }
 
-        // if (lpsDisplay[lpsDisplay.length - 1] < lpsDisplay[lpsDisplay.length - 2]) {
-        //     setWordStuckList(prev => [...prev, words[TFstate.HLIndex]])
-        //     console.log(wordStuckList)
-        // }
 
         return () => clearInterval(timerInterval)
     }, [TFstate.typingStarted, TFstate.timer, TFstate.isPaused])
 
 
-    useEffect(() => {
-        if (!TFstate.typingStarted) return;
-        const interval = setInterval(() => {
-            setNextTypedDuration(p => p + 1)
-        }, 1)
-        setRythmInterval(interval)
-        setIntervalIsStarted(true)
-        return () => {
-            clearInterval(interval)
-        }
-    }, [TFstate.typingStarted])
 
 
     useEffect(() => {
@@ -214,59 +167,25 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
         inputRef.current!.focus()
     }, [])
 
-    useEffect(() => {
-        setLTyped(p => p + 1)
-        if (!typedCorrect && typedCorrect != null) {
 
-            let data = [...wordStuckList]
-            let obj = data.find((o, i) => {
-                if (o.word === words[TFstate.HLIndex]) {
-                    data[i] = {
-                        ...data[i],
-                        missClick: data[i].missClick + 1
-                    }
-                    return true
-                }
-            })
 
-            if (obj) return setWordStuckList(data)
-            else return setWordStuckList(prev => [...prev, {
-                word: words[TFstate.HLIndex],
-                correct: true,
-                missClick: 1
-            }])
-        }
-        else {
-            setRythmWord(p => [...p, nextTypedDuration])
-            setNextTypedDuration(0)
-        }
-    }, [TPstate.charCount])
-
-    // useEffect(() => {
-    //     setLpsDisplay(prev => [...prev, lps])
-    //     setLps(0)
-    // }, [TFstate.timer])
 
     const restart = (new_test?: boolean) => {
         if (new_test) refetch()
-        setWordStuckList([])
+        setSDList([])
+        setRythmWord([])
         restart_letter_styles(TFstate.HLIndex)
         inputRef.current!.value = ""
         inputRef.current!.focus()
         TFDispatch({ type: ITFActions.RESET })
         TPDispatch({ type: ITPActions.RESET })
-        setLTyped(0)
-        setNextTypedDuration(0)
-        setIntervalIsStarted(null)
-        setRythmWord([])
-        console.log(ryhtmWord)
-        clearInterval(rythmInterval)
-        // setLps(0)
+
     }
 
     const restart_letter_styles = (index: number) => {
         for (let a = 0; a <= index; a++) {
             let letter = letterRef.current[a].childNodes as NodeListOf<HTMLElement>
+
             letter.forEach((l, i) => {
                 l.style.color = "white"
             })
@@ -292,9 +211,7 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
         },
         states: {
             TFstate, TPstate,
-            // lpsDisplay, 
-            nextTypedDuration,
-            wordStuckList
+            SDList
         },
         refs: {
             letterRef, inputRef, exessElContainer, focusCoverRef,
