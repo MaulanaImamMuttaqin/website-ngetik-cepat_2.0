@@ -3,7 +3,7 @@ import { storage } from "../../utils/storage";
 
 
 // const baseURL = 'http://192.168.100.185:8000/'
-const baseURL = 'http://website-ngetik-cepat.herokuapp.com/'
+const baseURL = 'https://website-ngetik-cepat.herokuapp.com/'
 const client = axios.create({ baseURL: baseURL })
 
 type options = {
