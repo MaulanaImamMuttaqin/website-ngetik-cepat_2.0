@@ -50,7 +50,9 @@ function TypingFieldSinglePlayer() {
         restart,
         focusInput
     }
-
+    useEffect(() => {
+        console.log(words)
+    }, [words])
     useEffect(() => {
         if (!states.TPstate.isFinish) return;
         if (!isLoggedIn) return;
