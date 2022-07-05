@@ -32,7 +32,15 @@ body {
 }
 
 .word-normal {
-  @apply text-xl text-gray-600
+  @apply text-xl text-gray-500
+}
+
+.word-highlight-light {
+  @apply text-4xl text-gray-900
+}
+
+.word-normal-light {
+  @apply text-xl text-gray-500
 }
 
 #profile:hover>#profile-dropdown {

@@ -64,7 +64,8 @@ export const typingPerformanceReducer = (state: ITPState, action: Action) => {
                 upload: true,
                 showPerformance: true,
                 speed: payload.net,
-                accuracy: payload.accuracy
+                accuracy: payload.accuracy,
+                isFinish: true
             }
         default:
             return state;

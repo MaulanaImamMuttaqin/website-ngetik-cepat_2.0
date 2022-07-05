@@ -12,6 +12,9 @@ function Sidebar() {
             <div className="h-full w-full  flex items-center ">
                 <div className='h-auto py-5 w-full flex flex-col gap-10 justify-around items-center border-r-4 border-blue-500'>
                     <div onClick={() => navigate('/')} className="h-14 w-14 rounded-full border border-gray-800 transition ease-in-out duration-300 hover:cursor-pointer hover:bg-blue-500 center text-blue-500 hover:text-gray-800">
+                        <ChevronRightIcon className='h-8 w-8' />
+                    </div>
+                    <div onClick={() => navigate('/type-practice')} className="h-14 w-14 rounded-full border border-gray-800 transition ease-in-out duration-300 hover:cursor-pointer hover:bg-blue-500 center text-blue-500 hover:text-gray-800">
                         <ChevronDoubleRightIcon className='h-8 w-8' />
                     </div>
                     <div onClick={() => navigate('/type-multiplayer')} className="h-14 w-14 rounded-full border border-gray-800 transition ease-in-out duration-300 hover:cursor-pointer hover:bg-blue-500 center text-blue-500 hover:text-gray-800">

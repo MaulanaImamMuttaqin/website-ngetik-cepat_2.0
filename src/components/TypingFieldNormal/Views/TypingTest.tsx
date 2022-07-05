@@ -8,11 +8,9 @@ function TypingTest({ ...props }: ITFProps) {
 
     return (
         <div className='relative z-0'>
-            {/* render component ini kalau inputnya sudah gak focus lagi trus componentnya kalau di tekan bisa memfocuskan inputannya lagi */}
             <div className={` p-2 rounded-2xl shadow-2xl`}>
                 <div className=" font-semibold tracking-[.1em] text-xl border-b border-white text-blue-500 flex justify-between px-5 mb-5">
-                    <span>{props.states.TFstate.HLIndex}</span>
-                    {/* <span>{props.states.nextTypedDuration}</span> */}
+                    <span>{props.states.TFstate.timer}</span>
                     <span onClick={() => props.restart!(true)}> <RefreshIcon className='h-6 w-6' /></span>
                 </div>
                 <div className='relative h-[350px] w-[400px]'>
@@ -37,6 +35,21 @@ function TypingTest({ ...props }: ITFProps) {
                                             />
                                         })
                                     }
+                                    {/* {
+
+                                        props.words.map((w: string[], i: number) => {
+                                            // console.log(i === props.states.TFstate.HLIndex && "highlight-normal")
+                                            return <div key={i} className={`transition-all text-center  h-[50px] center word-${i === props.states.TFstate.HLIndex ? 'highlight-light' : 'normal-light'}  dark:${i === props.states.TFstate.HLIndex ? 'text-white text-4xl' : 'normal'} font-semibold`}>
+                                                <div ref={(el: HTMLDivElement) => (props.refs.letterRef.current![i] = el)} className="">
+                                                    {w[1].split("").map((l, i) => {
+                                                        return <span key={i}>{l}</span>
+                                                    })}
+                                                    <span ref={(el: HTMLSpanElement) => props.refs.exessElContainer.current![i] = el} id="excessive"></span>
+                                                </div>
+                                            </div>
+                                        })
+
+                                    } */}
                                 </div>
                             </div>
 

@@ -4,7 +4,7 @@ let typingFieldStates = {
     wordTyped: '',
     typingStarted: false,
     inputIsFocus: true,
-    timer: 30,
+    timer: 60,
     isPaused: false
 }
 

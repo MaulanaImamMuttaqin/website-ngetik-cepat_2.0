@@ -8,6 +8,7 @@ let typingPerformanceStates = {
     accuracy: 0,
     showPerformance: false,
     upload: false,
+    isFinish: false
 
 
 }

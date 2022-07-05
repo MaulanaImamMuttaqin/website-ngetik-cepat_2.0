@@ -1,4 +1,4 @@
-import { RefObject } from "react"
+import { ChangeEvent, RefObject } from "react"
 
 export enum ITFActions {
     SPACED = 'SPACED',
@@ -44,32 +44,32 @@ export interface ITPState {
     speed: number,
     accuracy: number,
     showPerformance: boolean,
-    upload: boolean
+    upload: boolean,
+    isFinish: boolean
 
 }
 
 
 export interface ITFProps {
-    words: Array<string>
-    isLoading: boolean,
-    isFetching: boolean,
+    words: Array<string[]>
+    isLoading?: boolean,
+    isFetching?: boolean,
     input: {
-        inputRef: RefObject<HTMLInputElement>,
-        inputHandler: () => void,
+
+        inputHandler: (e: ChangeEvent<HTMLInputElement>) => "" | undefined,
         onFocus: () => void,
         onBlur: () => void
     },
     states: {
         TFstate: ITFState,
         TPstate: ITPState,
-        nextTypedDuration: number,
-        lpsDisplay: Array<number>
     },
     refs: {
+        inputRef: RefObject<HTMLInputElement>,
         letterRef: RefObject<Array<HTMLDivElement>>,
         exessElContainer: RefObject<Array<HTMLSpanElement>>,
         focusCoverRef?: RefObject<null>,
     }
-    restart: (new_test?: boolean) => void,
+    restart?: (new_test?: boolean) => void,
     focusInput: () => void
 }

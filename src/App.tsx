@@ -7,6 +7,10 @@ import TypingFieldSinglePlayer from './components/TypingFieldSinglePlayer';
 import Wrapper from './components/Wrapper';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import AuthContextProvider from './components/AuthContext/AuthContextProvider';
+import Register from './components/Register';
+import TypingFieldNormal from './components/TypingFieldNormal';
+import Settings from './components/Settings';
+import User from './components/User';
 
 // const routes = {
 //   {path:'/Login', element}
@@ -21,9 +25,13 @@ function App() {
         <TransitionGroup component={null}>
           <CSSTransition key={location.key} timeout={300} classNames='router'>
             <Routes location={location}>
-              <Route path='/Login' element={<Login />} />
+              <Route path='/login' element={<Login />} />
+              <Route path='/register' element={<Register />} />
               <Route path='/type-multiplayer' element={<TypingFieldMultiplayer />} />
-              <Route path='' element={<TypingFieldSinglePlayer />} />
+              <Route path='/type-practice' element={<TypingFieldSinglePlayer />} />
+              <Route path='/settings' element={<Settings />} />
+              <Route path='/user' element={<User />} />
+              <Route path='' element={<TypingFieldNormal />} />
             </Routes>
           </CSSTransition>
         </TransitionGroup>

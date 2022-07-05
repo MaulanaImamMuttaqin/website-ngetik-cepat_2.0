@@ -1,1 +1,1 @@
-export { default } from "./TypingFieldSinglePlayer.Page";
+export { default } from "./TypingFieldSinglePlayer.Page2";

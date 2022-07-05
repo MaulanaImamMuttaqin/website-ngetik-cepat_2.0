@@ -1,12 +1,14 @@
 export interface IAuthState {
     isLoggedIn: boolean,
     userData: any,
+    isRegisterSuccess: boolean
 }
 
 export enum IAuthActions {
     LOGIN = 'LOGIN',
     LOGOUT = 'LOGOUT',
-    SET_USER = 'SET_USER'
+    SET_USER = 'SET_USER',
+    REGISTER = 'REGISTER'
 }
 
 export interface IAction {
@@ -21,11 +23,13 @@ export const authReducer = (state: IAuthState, action: IAction) => {
             return {
                 ...state,
                 isLoggedIn: true,
+                isRegsiterSucces: false,
             }
         case IAuthActions.LOGOUT:
             return {
                 ...state,
                 isLoggedIn: false,
+                userData: {}
             }
         case IAuthActions.SET_USER:
             return {
@@ -34,6 +38,11 @@ export const authReducer = (state: IAuthState, action: IAction) => {
                 userData: payload,
                 // token: payload.token,
                 // isLoggedIn: true
+            }
+        case IAuthActions.REGISTER:
+            return {
+                ...state,
+                isRegisterSuccess: true
             }
         default:
             return state;

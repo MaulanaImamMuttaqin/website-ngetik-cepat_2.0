@@ -3,6 +3,7 @@ import { UserIcon } from '@heroicons/react/solid'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../AuthContext/AuthContextProvider'
 import { IAuthActions } from '../../AuthContext/reducer'
+import { storage } from '../../../utils/storage'
 function Header() {
     const navigate = useNavigate()
     const { AuthState, AuthDispatch } = useContext(AuthContext)
@@ -11,11 +12,12 @@ function Header() {
         let signout = window.confirm("Keluar dari Akun Anda?")
         if (!signout) return;
         AuthDispatch({ type: IAuthActions.LOGOUT })
+        storage.clearToken()
         navigate('/')
     }
     return (
-        <div className='absolute w-screen h-20 flex items-center text-white justify-between px-10 z-30'>
-            <div className='hover:cursor-pointer'>Title</div>
+        <div className='absolute w-screen h-20 flex items-center text-blue-500 dark:text-white justify-between px-10 z-30 '>
+            <div className='hover:cursor-pointer text-4xl tracking-widest font-bold'>TypeR</div>
             <div id="profile" className='flex items-center gap-5 relative  h-full hover:cursor-pointer'>
                 <div className='rounded-full h-12 w-12 center p-1 '><UserIcon className='h-8 w-8' /></div>
                 <div id="profile-dropdown" className="backdrop-blur-sm border border-white w-60 h-auto top-[50px] opacity-0 invisible right-0  absolute rounded-lg p-5 transition-all">
@@ -30,8 +32,8 @@ function Header() {
                         {
                             AuthState.isLoggedIn &&
                             <>
-                                <li className='px-4 py-2 hover:bg-gray-600 hover:text-white hover:cursor-pointer'>Settings</li>
-                                <li className='px-4 py-2 hover:bg-gray-600 hover:text-white hover:cursor-pointer'>User</li>
+                                <li className='px-4 py-2 hover:bg-gray-600 hover:text-white hover:cursor-pointer' onClick={() => navigate('/settings')}>Settings</li>
+                                <li className='px-4 py-2 hover:bg-gray-600 hover:text-white hover:cursor-pointer' onClick={() => navigate('/user')}>User</li>
                             </>
                         }
                         {

@@ -7,9 +7,9 @@ interface storage {
     setToken: (token: any) => void,
     clearToken: () => void
 }
-
+console.log(window.localStorage.getItem("token"))
 export const storage: storage = {
-    getToken: () => JSON.parse(window.localStorage.getItem("token")!),
+    getToken: () => window.localStorage.getItem("token")?.toString() == "undefined" ? false : JSON.parse(window.localStorage.getItem("token")!),
     setToken: (token: any) =>
         window.localStorage.setItem("token", JSON.stringify(token)),
     clearToken: () => window.localStorage.removeItem("token")

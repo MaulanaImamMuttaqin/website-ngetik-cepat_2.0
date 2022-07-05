@@ -1,13 +1,12 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import useKeyPress from '../../customHooks/useKeyPress'
-import { calculateTypingSpeed, getStandardDeviation } from '../../utils/utils'
-import { ITFActions, ITPActions } from './Interfaces'
-import Reducers from './reducers/Reducers'
-import Refs from './refs'
-import typingFieldStates from './states/typingFieldStates'
+import useKeyPress from './useKeyPress'
+import { calculateTypingSpeed, getStandardDeviation } from '../utils/utils'
+import { ITFActions, ITPActions } from '../components/TypingField/Interfaces'
+import Reducers from '../components/TypingField/reducers/Reducers'
+import Refs from '../components/TypingField/refs'
+import typingFieldStates from '../components/TypingField/states/typingFieldStates'
 
-
-const TypingField = ({ children, query }: { children: any, query?: any }) => {
+function useTypingField({ children, query }: { children: any, query?: any }) {
     const { data: words, isLoading, isFetching, refetch } = query
     const { TFstate, TPstate, TFDispatch, TPDispatch } = Reducers()
     const { letterRef, inputRef, exessElContainer, focusCoverRef } = Refs()
@@ -20,6 +19,7 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
     const [ifWordStarted, setIfWordStarted] = useState<boolean>(false)
     const [wrgIncremented, setWrgIncremented] = useState<boolean>(false)
     let peakDetect = false
+
     const inputHandler = (e: ChangeEvent<HTMLInputElement>) => {
         TFDispatch({ type: ITFActions.START })
         let spaceExist = e.target.value[e.target.value.length - 1] === " " ? true : false
@@ -187,7 +187,7 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
 
 
     const restart = (new_test?: boolean) => {
-        if (new_test) refetch()
+        // if (new_test) refetc()
         setSDList([])
         setRythmWord([])
         restart_letter_styles(TFstate.HLIndex)
@@ -235,10 +235,7 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
         focusInput
     }
 
-    return <div className="h-screen center">
-        {children(props)}
-    </div>
-
+    return props
 }
 
-export default TypingField
+export default useTypingField
