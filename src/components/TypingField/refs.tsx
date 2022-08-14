@@ -2,7 +2,7 @@ import React, { Ref, useRef } from 'react'
 
 function Refs() {
     const letterRef = useRef<Array<HTMLDivElement>>([])
-    const inputRef = useRef<HTMLInputElement>(null)
+    const inputRef = useRef<HTMLTextAreaElement>(null)
     const exessElContainer = useRef<Array<HTMLSpanElement>>([])
     const focusCoverRef = useRef(null)
 

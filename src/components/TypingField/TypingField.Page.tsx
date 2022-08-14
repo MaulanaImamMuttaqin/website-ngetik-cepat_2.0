@@ -20,7 +20,7 @@ const TypingField = ({ children, query }: { children: any, query?: any }) => {
     const [ifWordStarted, setIfWordStarted] = useState<boolean>(false)
     const [wrgIncremented, setWrgIncremented] = useState<boolean>(false)
     let peakDetect = false
-    const inputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
         TFDispatch({ type: ITFActions.START })
         let spaceExist = e.target.value[e.target.value.length - 1] === " " ? true : false
         let element = letterRef.current[TFstate.HLIndex]

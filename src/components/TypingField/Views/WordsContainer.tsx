@@ -10,7 +10,7 @@ type words_container = {
 }
 
 
-function WordsContainer({ ...props }: words_container) {
+const WordsContainer = React.memo(({ ...props }: words_container) => {
     return (
         <div className={`transition-all text-center  h-[50px] center word-${props.isIndex ? 'highlight-light' : 'normal-light'}  dark:${props.isIndex ? 'text-white text-4xl' : 'normal'} font-semibold`}>
             <div ref={(el: HTMLDivElement) => (props.letterref.current![props.index] = el)} className="">
@@ -21,6 +21,6 @@ function WordsContainer({ ...props }: words_container) {
             </div>
         </div>
     )
-}
+})
 
 export default WordsContainer

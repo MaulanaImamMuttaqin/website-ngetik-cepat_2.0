@@ -56,7 +56,7 @@ export interface ITFProps {
     isFetching?: boolean,
     input: {
 
-        inputHandler: (e: ChangeEvent<HTMLInputElement>) => "" | undefined,
+        inputHandler: (e: ChangeEvent<HTMLTextAreaElement>) => "" | undefined,
         onFocus: () => void,
         onBlur: () => void
     },
@@ -65,7 +65,7 @@ export interface ITFProps {
         TPstate: ITPState,
     },
     refs: {
-        inputRef: RefObject<HTMLInputElement>,
+        inputRef: RefObject<HTMLTextAreaElement>,
         letterRef: RefObject<Array<HTMLDivElement>>,
         exessElContainer: RefObject<Array<HTMLSpanElement>>,
         focusCoverRef?: RefObject<null>,

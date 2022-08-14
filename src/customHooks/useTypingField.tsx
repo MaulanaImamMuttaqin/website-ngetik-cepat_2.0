@@ -23,9 +23,14 @@ function useTypingField(words: Array<string[]>, reWords: () => void, enableTimer
     const [countType, setCountType] = useState<number>(0)
     const [ex_i, set_ex_i] = useState<number[]>([])
     const [firstWrongIndex, setFirstWrongIndex] = useState<number | null>()
-    const inputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
         TFDispatch({ type: ITFActions.START })
-        let spaceExist = e.target.value[e.target.value.length - 1] === " " ? true : false
+        const InputValue: string = e.target.value
+        // var charCount = InputValue.length + InputValue.match(/\n/gm)!.length;
+        const charCount = InputValue.match(/[\s\n]/gm)
+        // console.log(charCount)
+        let spaceExist = charCount ? true : false;
+        // let spaceExist = e.target.value[e.target.value.length - 1] === " " ? true : false
         let element = letterRef.current[TFstate.HLIndex]
         let letters = element.childNodes as NodeListOf<HTMLElement>
         let word = e.target.value
@@ -106,12 +111,12 @@ function useTypingField(words: Array<string[]>, reWords: () => void, enableTimer
             else TPDispatch({ type: ITPActions.INCORRECT, payload: wrongChar })
 
             let rythm = calculateRyhtm(ryhtmWord)
-            console.log(rythm)
+            // console.log(rythm)
             let no_excess_rythm = removeExcessive(rythm, ex_i)
 
-            console.log(ex_i)
+            // console.log(ex_i)
 
-            console.log(no_excess_rythm)
+            // console.log(no_excess_rythm)
             // console.log(rythm)
 
             setSDList(p => [...p, {

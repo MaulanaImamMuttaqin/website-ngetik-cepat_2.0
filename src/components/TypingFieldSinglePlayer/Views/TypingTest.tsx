@@ -47,7 +47,7 @@ function TypingTest({ ...props }: ITFProps) {
 
                 </div>
 
-                <input className='block h-0' type="text" ref={props.refs.inputRef} onChange={props.input.inputHandler}
+                <textarea className='block h-0' ref={props.refs.inputRef} onChange={props.input.inputHandler}
                     onFocus={props.input.onFocus} onBlur={props.input.onBlur}
                 />
             </div>

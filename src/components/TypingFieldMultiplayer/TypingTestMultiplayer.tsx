@@ -205,7 +205,7 @@ const TypingTestView = ({ ...props }: typingTestView) => {
 
                 </div>
 
-                <input className='block h-0' type="text" ref={props.refs.inputRef} onChange={props.input.inputHandler}
+                <textarea cols={30} rows={10} className='block h-0' ref={props.refs.inputRef} onChange={props.input.inputHandler}
                     onFocus={props.input.onFocus} onBlur={props.input.onBlur}
                 />
             </div>
