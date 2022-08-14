@@ -80,7 +80,7 @@ function TestResults({ ...props }: { TFstate: ITFState, TPstate: ITPState, SDLis
                         <div className=" w-full p-5 overflow-y-auto">
                             <h2 className="tracking-wide font-semibold">this some of the word you might struggle</h2>
                             <div className="p-2">
-                                {sorted.map((w: any, i) => (
+                                {props.SDList.map((w: any, i) => (
                                     <p key={i}><span className='text-red-500'>{i + 1}</span> --{w.word} : {w.calcStanDev}</p>
                                 ))}
                             </div>

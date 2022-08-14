@@ -114,7 +114,7 @@ function TypingFieldSinglePlayer() {
     }
 
     if (!isLoggedIn) return (
-        <div className="center h-screen text-white flex-col">
+        <div className="center h-screen dark:text-white flex-col">
             <div>You're not Logged In</div>
             <div>Please Logged in to use this features</div>
         </div>)
@@ -122,7 +122,7 @@ function TypingFieldSinglePlayer() {
 
     return (
         <div className="h-screen center">
-            <h1 className='absolute top-20 text-3xl mb-10 font-bold text-white'>Practice Mode</h1>
+            <h1 className='absolute top-20 text-3xl mb-10 font-bold dark:text-white'>Practice Mode</h1>
             <>
 
                 <TypingTest {...props} />

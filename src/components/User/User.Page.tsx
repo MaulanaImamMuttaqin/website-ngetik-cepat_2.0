@@ -114,7 +114,7 @@ const HistoryView = () => {
     }, [isFetching])
 
     return (
-        <div className=' text-2xl flex flex-col gap-5'>
+        <div className=' text-md flex flex-col gap-2'>
             <div className=' flex justify-between'>
                 <span>Top Speed:</span>
                 <span>{results?.top_speed} KPM </span>

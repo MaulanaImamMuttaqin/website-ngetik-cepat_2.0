@@ -10,7 +10,7 @@ function Wrapper({ children }: { children: JSX.Element }) {
 
 
     return (
-        <div className='transition-color duration-100 h-screen w-screen overflow-hidden  dark:bg-dark-blue-gradient bg-gray-300' >
+        <div className='transition-color duration-100 h-screen w-screen overflow-hidden  dark:bg-dark-blue-gradient bg-gray-100' >
             <Header />
             <Sidebar />
             {children}

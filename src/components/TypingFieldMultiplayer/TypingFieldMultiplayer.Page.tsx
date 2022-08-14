@@ -202,7 +202,7 @@ function TypingFieldMultiplayer() {
 
 
     if (!AuthState.isLoggedIn) return (
-        <div className="center h-screen text-white flex-col">
+        <div className="center h-screen dark:text-white flex-col">
             <div>You're not Logged In</div>
             <div>Please Logged in to use this features</div>
         </div>)
