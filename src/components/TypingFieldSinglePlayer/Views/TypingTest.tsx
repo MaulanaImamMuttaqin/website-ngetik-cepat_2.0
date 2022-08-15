@@ -29,6 +29,7 @@ function TypingTest({ ...props }: ITFProps) {
                                     {
                                         props.words.map((w: string[], i: number) => {
                                             return <WordsContainer
+                                                key={i}
                                                 word={w[1]}
                                                 isIndex={i === props.states.TFstate.HLIndex}
                                                 letterref={props.refs.letterRef}

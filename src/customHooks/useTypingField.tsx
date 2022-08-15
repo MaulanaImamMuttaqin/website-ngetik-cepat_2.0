@@ -6,7 +6,13 @@ import Reducers from '../components/TypingField/reducers/Reducers'
 import Refs from '../components/TypingField/refs'
 import typingFieldStates from '../components/TypingField/states/typingFieldStates'
 
-function useTypingField(words: Array<string[]>, reWords: () => void, enableTimer: boolean = true) {
+type typingFieldTypes = {
+    words: Array<string[]>,
+    reWords: () => void,
+    enableTimer?: boolean,
+    strict?: boolean
+}
+function useTypingField({ words, reWords, enableTimer = true, strict = true }: typingFieldTypes) {
     const { TFstate, TPstate, TFDispatch, TPDispatch } = Reducers()
     const { letterRef, inputRef, exessElContainer, focusCoverRef } = Refs()
     const mousePressed = useKeyPress("mouse", "mouse", window)
@@ -22,15 +28,14 @@ function useTypingField(words: Array<string[]>, reWords: () => void, enableTimer
     const [timeStart, setTimeStart] = useState<number>(0)
     const [countType, setCountType] = useState<number>(0)
     const [ex_i, set_ex_i] = useState<number[]>([])
+
     const [firstWrongIndex, setFirstWrongIndex] = useState<number | null>()
+
+
     const inputHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
         TFDispatch({ type: ITFActions.START })
         const InputValue: string = e.target.value
-        // var charCount = InputValue.length + InputValue.match(/\n/gm)!.length;
-        const charCount = InputValue.match(/[\s\n]/gm)
-        // console.log(charCount)
-        let spaceExist = charCount ? true : false;
-        // let spaceExist = e.target.value[e.target.value.length - 1] === " " ? true : false
+        let nextWord = InputValue.match(/[\s\n]/gm) ? true : false;
         let element = letterRef.current[TFstate.HLIndex]
         let letters = element.childNodes as NodeListOf<HTMLElement>
         let word = e.target.value
@@ -95,15 +100,19 @@ function useTypingField(words: Array<string[]>, reWords: () => void, enableTimer
         if (peakDetect && !wrgIncremented && !excessive) {
             setWrgLettTotal(p => p + 1)
             setWrgIncremented(true)
-            // console.log("wrong")
         }
-        // console.log(indexDifference)
 
         // if the user pressed space move to next word and check the previously typed word if correct or not 
-        if (spaceExist) {
+        if (nextWord) {
             let [isCorrect, wrongChar] = checkTypedWord(TFstate.wordTyped, words[TFstate.HLIndex][1])
 
-            if (!typedCorrect || !isCorrect) return;
+            if (!typedCorrect || !isCorrect) {
+                if (strict) return;
+                else {
+                    element.classList.add("border-b-2", "border-red-600")
+                }
+            };
+
             if (word === "") return inputRef.current!.value = ""
 
             TFDispatch({ type: ITFActions.SPACED })
@@ -111,13 +120,8 @@ function useTypingField(words: Array<string[]>, reWords: () => void, enableTimer
             else TPDispatch({ type: ITPActions.INCORRECT, payload: wrongChar })
 
             let rythm = calculateRyhtm(ryhtmWord)
-            // console.log(rythm)
+
             let no_excess_rythm = removeExcessive(rythm, ex_i)
-
-            // console.log(ex_i)
-
-            // console.log(no_excess_rythm)
-            // console.log(rythm)
 
             setSDList(p => [...p, {
                 word: words[TFstate.HLIndex][1],
@@ -125,7 +129,6 @@ function useTypingField(words: Array<string[]>, reWords: () => void, enableTimer
                 totalPeak: wrgLettTotal,
                 standDeviation: getStandardDeviation(no_excess_rythm),
                 calcStanDev: calculateWordScore(getStandardDeviation(no_excess_rythm)),
-                // calStandDeviation: getStandardDeviation(rythm) * (wrgLettTotal < 1 ? 1 : wrgLettTotal),
                 rythm: no_excess_rythm,
                 correct: isCorrect
             }])

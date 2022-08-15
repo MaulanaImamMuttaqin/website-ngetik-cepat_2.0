@@ -35,8 +35,11 @@ function TypingFieldSinglePlayer() {
         restart,
         setter,
         focusInput,
-    } = useTypingField(words, refetch)
-
+    } = useTypingField({
+        words,
+        reWords: refetch,
+        strict: false
+    })
 
 
 
@@ -50,9 +53,7 @@ function TypingFieldSinglePlayer() {
         restart,
         focusInput
     }
-    // useEffect(() => {
-    //     console.log(words)
-    // }, [words])
+
     useEffect(() => {
         if (!states.TPstate.isFinish) return;
         if (!isLoggedIn) return;

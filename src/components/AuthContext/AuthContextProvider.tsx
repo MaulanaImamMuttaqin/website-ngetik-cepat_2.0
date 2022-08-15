@@ -39,7 +39,6 @@ function AuthContextProvider({ children }: { children: JSX.Element }) {
   )
 
   useEffect(() => {
-    console.log(storage.getToken())
     if (!storage.getToken()) return AuthDispatch({ type: IAuthActions.LOGOUT });
     let user_data = parseJWT(storage.getToken().access)
     AuthDispatch({ type: IAuthActions.SET_USER, payload: user_data })

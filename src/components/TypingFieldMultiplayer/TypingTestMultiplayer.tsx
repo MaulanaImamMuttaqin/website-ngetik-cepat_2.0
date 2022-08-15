@@ -53,7 +53,11 @@ function TypingTestMultiplayer({ ...props }: testMultType) {
         refs,
         restart,
         focusInput
-    } = useTypingField(props.words, () => { }, false)
+    } = useTypingField({
+        words: props.words,
+        reWords: () => { },
+        enableTimer: false
+    })
 
 
 
